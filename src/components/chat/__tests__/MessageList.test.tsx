@@ -12,15 +12,10 @@ afterEach(() => {
   cleanup();
 });
 
-test("MessageList shows empty state when no messages", () => {
-  render(<MessageList messages={[]} />);
-
-  expect(
-    screen.getByText("Start a conversation to generate React components")
-  ).toBeDefined();
-  expect(
-    screen.getByText("I can help you create buttons, forms, cards, and more")
-  ).toBeDefined();
+// Empty state is now rendered by ChatInterface, not MessageList
+test("MessageList renders nothing when messages array is empty", () => {
+  const { container } = render(<MessageList messages={[]} />);
+  expect(container.querySelector(".space-y-6")?.children).toHaveLength(0);
 });
 
 test("MessageList renders user messages", () => {
@@ -78,7 +73,8 @@ test("MessageList renders messages with parts", () => {
   render(<MessageList messages={messages} />);
 
   expect(screen.getByText("Creating your component...")).toBeDefined();
-  expect(screen.getByText("str_replace_editor")).toBeDefined();
+  // Tool call should show a friendly label, not the raw tool name
+  expect(screen.queryByText("str_replace_editor")).toBeNull();
 });
 
 test("MessageList shows content for assistant message with content", () => {
